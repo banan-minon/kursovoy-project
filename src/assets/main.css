@@ -1,0 +1,563 @@
+/*
+ * main.css — глобальные стили
+ * Полностью переработано в стиле abuse.moscow/shop
+ * Черно-белая минималистичная эстетика, убраны тени и цвета.
+ */
+
+/* Подключаем жирный гротескный шрифт, как на референсе */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #ffffff; /* Чисто белый фон, как на сайте */
+  color: #000000; /* Строгий черный текст */
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Убираем подчеркивания у ссылок */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Шапка сайта (header) */
+header {
+  background: #ffffff;
+  /* Убираем тень, добавляем только нижнюю границу */
+  border-bottom: 1px solid #e5e5e5; /* Тонкая серая линия для разделения */
+  padding: 24px 40px; /* Немного увеличим отступы для воздуха */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+/* Логотип или название магазина в хедере можно сделать жирным */
+.header-logo {
+  font-weight: 900;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* Кнопка корзины — минималистичная */
+.cart-button {
+  position: relative;
+  background: none; /* Убираем фон */
+  color: #000000;
+  padding: 8px 0 8px 20px; /* Убираем паддинги, кроме левого, если нужно */
+  border: none; /* Убираем обводку */
+  border-radius: 0; /* Убираем скругление */
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+/* Можно добавить иконку корзины через псевдоэлемент, но оставим как есть */
+
+/* Счетчик товаров в корзине */
+.cart-button span {
+  position: absolute;
+  top: -4px;
+  right: -12px;
+  background: #000000; /* Черный фон */
+  color: #ffffff; /* Белый текст */
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%; /* Можно оставить круг, но можно сделать и квадратным */
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+/* 🌫️ FADE + SLIDE transition */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.35s ease;
+}
+
+/* вход */
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(12px);
+}
+
+.fade-slide-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* выход */
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+/* Сетка товаров */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Чуть шире карточки */
+  gap: 40px; /* Увеличиваем расстояние между карточками */
+  padding: 60px 40px; /* Увеличиваем отступы секции */
+  max-width: 1440px; /* Ограничиваем максимальную ширину */
+  margin: 0 auto; /* Центрируем сетку */
+}
+/* 📦 контейнер */
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+/* 🖼 картинка */
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 🎛 слой управления (ВАЖНО) */
+.slider-controls {
+  position: absolute;
+  inset: 0; /* занимает всю картинку */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  pointer-events: none; /* клики проходят сквозь слой */
+}
+
+/* ⬅️ ➡️ кнопки */
+.slider-btn {
+  pointer-events: auto; /* возвращаем кликабельность */
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+
+  border: none;
+  border-radius: 50%;
+
+  font-size: 20px;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+  z-index: 5;
+}
+
+/* hover */
+.slider-btn:hover {
+  background: rgba(0, 0, 0, 0.75);
+  transform: scale(1.1);
+}
+.product-image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  background: #f5f5f5;
+  margin-bottom: 16px;
+}
+/* Карточка товара */
+.product-card {
+  background: #ffffff;
+  /* Убираем фон, скругление и тени */
+  border-radius: 0;
+  padding: 0; /* Убираем внутренние отступы, фото должно быть в край */
+  box-shadow: none;
+  transition: opacity 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card:hover {
+  /* Убираем трансформацию и тени, оставляем только легкое затемнение */
+  opacity: 0.85; /* Эффект легкого наведения */
+  transform: none;
+  box-shadow: none;
+}
+
+/* Изображение товара */
+.product-card img {
+  width: 100%;
+  aspect-ratio: 3 / 4; /* Соотношение сторон, как на референсе */
+  object-fit: cover; /* Чтобы фото красиво заполняло область */
+  background-color: #f5f5f5; /* Светло-серый фон для фото, пока они не загружены */
+  margin-bottom: 16px;
+}
+
+/* Название товара */
+.product-card h3 {
+  font-size: 1rem;
+  font-weight: 500; /* Не жирный */
+  margin: 0 0 8px 0;
+  text-transform: uppercase; /* Часто в таких магазинах названия в upper */
+  letter-spacing: 0.02em;
+}
+
+/* Цена товара */
+.product-card .price {
+  font-size: 1.1rem;
+  font-weight: 700; /* Жирная цена — акцент */
+  margin: 0 0 20px 0;
+}
+
+/* Кнопка "В корзину" */
+.product-card button {
+  background: #000000; /* Черный фон */
+  color: #ffffff;
+  padding: 14px 0; /* Вертикальные отступы, горизонтальные по краям */
+  border-radius: 0; /* Убираем скругление */
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s ease;
+  border: 2px solid #000000; /* Черная рамка */
+  cursor: pointer;
+  width: 100%; /* На всю ширину карточки */
+  margin-top: auto; /* Прижимаем к низу */
+}
+
+.product-card button:hover {
+  background: #ffffff; /* Инверсия при наведении */
+  color: #000000;
+  transform: none; /* Убираем подъем */
+  border: 2px solid #000000;
+}
+
+/* Контейнер корзины */
+.cart-container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 0 40px;
+}
+
+/* Элемент корзины */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 24px 0; /* Убираем боковые паддинги и фон */
+  border-radius: 0;
+  box-shadow: none;
+  border-bottom: 1px solid #e5e5e5; /* Разделяем элементы только линией */
+  transition: none;
+}
+
+.cart-item:last-of-type {
+  border-bottom: none; /* У последнего элемента линии нет */
+}
+
+.cart-item:hover {
+  box-shadow: none;
+}
+
+/* Блок с информацией о товаре в корзине */
+.cart-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cart-item-title {
+  font-weight: 500;
+}
+.cart-item-price {
+  font-weight: 700;
+}
+
+/* Блок с кнопками управления количеством */
+.cart-item-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.cart-item-controls span {
+  font-weight: 500;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* Кнопки увеличения/уменьшения */
+.cart-item button {
+  padding: 8px 16px;
+  border-radius: 0;
+  color: #000000;
+  border: 1px solid #000000;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.cart-item button:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Можно убрать отдельные классы для increase/decrease, если они не нужны */
+.cart-item .increase,
+.cart-item .decrease {
+  background: transparent; /* Убираем цвета */
+}
+
+.cart-total {
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 2px solid #000000; /* Жирная черная линия */
+  letter-spacing: -0.02em;
+}
+
+/* Кнопка оформления заказа (если есть) */
+.checkout-button {
+  background: #000000;
+  color: #ffffff;
+  border: 2px solid #000000;
+  padding: 16px 32px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 24px;
+  width: 100%;
+}
+.checkout-button:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* ================= AUTH (LOGIN / REGISTER) ================= */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 20px;
+  border: 1px solid #e5e5e5;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  border-bottom: 1px solid #000;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  outline: none;
+  background: transparent;
+}
+
+.auth-input::placeholder {
+  color: #999;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 14px 0;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-button:hover {
+  background: #fff;
+  color: #000;
+}
+
+.auth-link {
+  margin-top: 16px;
+  font-size: 0.9rem;
+  text-align: center;
+  display: block;
+  color: #000;
+}
+
+.mr-2 {
+  margin-right: 10px;
+}
+
+.mr-3 {
+  margin-right: 10px;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* окно */
+.modal {
+  background: #fff;
+  padding: 30px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+}
+
+/* картинка */
+.modal-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+/* кнопка купить */
+.buy-btn {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* закрыть */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+/* универсальная кнопка */
+.btn {
+  width: 100%;
+  padding: 14px 0;
+  border: 2px solid #000;
+  background: #000;
+  color: #fff;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* вторичная кнопка */
+.btn-outline {
+  background: #fff;
+  color: #000;
+}
+.header-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.header-links a {
+  font-size: 0.9rem;
+}
+
+
+/* футер */
+.footer {
+  border-top: 1px solid #e5e5e5;
+  padding: 40px;
+  margin-top: 60px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* блоки */
+.footer-left,
+.footer-center,
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* логотип */
+.footer-logo {
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+/* ссылки */
+.footer a {
+  text-decoration: none;
+  color: #000;
+  transition: opacity 0.2s;
+}
+
+.footer a:hover {
+  opacity: 0.6;
+}
+
+
+.checkout-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.checkout-btn:hover {
+  opacity: 0.8;
+}

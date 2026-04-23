@@ -1,26 +1,49 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    
+    <!-- 🔝 HEADER -->
+    <header>
+      <h1 class="header-logo">CLOTHINGSTORE</h1>
+
+      <div class="header-links">
+        <router-link to="/login">Вход</router-link>
+        <router-link to="/register">Регистрация</router-link>
+
+        <router-link to="/cart" class="cart-button">
+          🛒
+          <span v-if="cart.totalQuantity > 0">
+            {{ cart.totalQuantity }}
+          </span>
+        </router-link>
+      </div>
+    </header>
+
+    <router-view />
+
+    <AppFooter />
+
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { useCartStore } from "./store/cart";
+import AppFooter from "./components/AppFooter.vue";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
+  name: "App",
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  components: {
+    AppFooter
+  },
+
+  computed: {
+    cart() {
+      const cart = useCartStore();
+      return {
+        items: cart.items,
+        totalQuantity: cart.items.reduce((sum, i) => sum + i.quantity, 0)
+      };
+    }
+  }
+};
+</script>
