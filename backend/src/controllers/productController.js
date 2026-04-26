@@ -1,17 +1,34 @@
 const pool = require("../../db");
 
-// Получить все товары
 exports.getProducts = async (req, res) => {
   try {
-    const products = await pool.query("SELECT * FROM products");
-    res.json(products.rows);
+    const { category, search } = req.query;
+    let query = "SELECT * FROM products WHERE 1=1";
+    const values = [];
+    let counter = 1;
+
+    if (category && category !== "") {
+      query += ` AND category ILIKE $${counter}`;
+      values.push(category);
+      counter++;
+    }
+
+    if (search) {
+      query += ` AND name ILIKE $${counter}`;
+      values.push(`%${search}%`);
+      counter++;
+    }
+
+    query += " ORDER BY id DESC";
+
+    const result = await pool.query(query, values);
+    res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Ошибка сервера" });
+    res.status(500).json({ message: "Ошибка загрузки товаров" });
   }
 };
 
-// Получить товар по id
 exports.getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -19,51 +36,40 @@ exports.getProductById = async (req, res) => {
     if (product.rows.length === 0) return res.status(404).json({ message: "Товар не найден" });
     res.json(product.rows[0]);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Ошибка сервера" });
   }
 };
 
-// Добавить товар (только для admin)
 exports.addProduct = async (req, res) => {
   try {
     const { name, description, price, category, size, image } = req.body;
-    const newProduct = await pool.query(
-      "INSERT INTO products (name, description, price, category, size, image) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *",
-      [name, description, price, category, size, image]
+
+    const imagesValue = image ? `{${image}}` : '{}';
+
+    const result = await pool.query(
+      "INSERT INTO products (name, description, price, category, size, images) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [
+        name, 
+        description, 
+        price, 
+        category, 
+        size || 'S-XL', 
+        imagesValue
+      ]
     );
-    res.json(newProduct.rows[0]);
+
+    res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error("ОШИБКА БД ПРИ ДОБАВЛЕНИИ:", err);
+    res.status(500).json({ message: "Ошибка сервера при добавлении товара", error: err.message });
   }
 };
 
-// Редактировать товар
-exports.updateProduct = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, description, price, category, size, image } = req.body;
-    const updated = await pool.query(
-      "UPDATE products SET name=$1, description=$2, price=$3, category=$4, size=$5, image=$6 WHERE id=$7 RETURNING *",
-      [name, description, price, category, size, image, id]
-    );
-    if (updated.rows.length === 0) return res.status(404).json({ message: "Товар не найден" });
-    res.json(updated.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Ошибка сервера" });
-  }
-};
-
-// Удалить товар
 exports.deleteProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    await pool.query("DELETE FROM products WHERE id=$1", [id]);
+    await pool.query("DELETE FROM products WHERE id=$1", [req.params.id]);
     res.json({ message: "Товар удалён" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Ошибка сервера" });
+    res.status(500).json({ message: "Ошибка удаления" });
   }
 };
