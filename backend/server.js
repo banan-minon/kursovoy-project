@@ -9,7 +9,7 @@ const orderRoutes = require("./src/routes/orderRoutes");
 const app = express();
 
 app.use(cors());
-app.use(express.json()); // ВАЖНО: должно быть выше роутов
+app.use(express.json()); 
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
